@@ -1,0 +1,69 @@
+@startuml
+!include <office/Servers/application_server>
+!include <office/Servers/database_server>
+!include <office/Devices/device_lcd_monitor>
+!include <office/Servers/domain_controller>
+title SYS265 Final Project Network Diagram - Milestone 01\n Group C Spring 2024
+
+nwdiag {
+
+  internet [shape = cloud];
+  internet -- WAN;
+network WAN {
+    group wfw {
+    WAN [address = ".2", description = "WAN FW"]
+    color = "orange"
+    description = "WAN Firewall"
+    }
+    address = "10.0.17.X/24"
+    color = "blue";
+    description = "WAN: "
+    // define Group
+    group fw {
+    
+    FW01-C [address = "10.0.17.76/24", description = FW01-C\n PFSense"]
+    color = "yellow"
+    description = "Firewall"
+    }
+    }
+  network LAN {
+    address = "172.16.1.X/24"
+    color = "green"
+    description = "LAN: "
+    FW01-C [address = 172.16.1.2/24]
+    group dc {
+    DC01-C[address=172.16.1.12/24, description = "<$domain_controller>\n DC01-C\n Windows Core 2019\n Services: AD & DNS\n Ansible node"]
+    DC02-C[address=172.16.1.13/24, description = "<$domain_controller>\n DC02-C\n Windows Core 2019\n Services: AD & DNS\n Ansible node"]
+    color = "palegreen"
+    description = "                     Domain Controllers & DNS"
+    }
+    group w {
+    W01-C[address= 172.16.1.100/24(DHCP) Address, description = "<$device_lcd_monitor>\n W01-C\n Windows 10 \n Workstation\n Roaming Profiles\n Corporate Background\n Remote Desktop"]
+    W02-C[address= 172.16.1.126/24(DHCP) Address, description = "<$device_lcd_monitor>\n W02-C\n Windows 10 \n Workstation\n Roaming Profiles\n Corporate Background\n Remote Desktop"]
+    color = "blue"
+    description = "                    Workstations"
+    }
+    group dhcp {
+    DHCP01-C[address=172.16.1.10/24, description = "<$application_server>\n DHCP01-C\n CENTOS 7\n Service:DHCP\n Ansible node"]
+    DHCP02-C[address=172.16.1.11/24, description = "<$application_server>\n DHCP02-C\n CENTOS 7\n Service:DHCP\n Ansible node"]
+    color = "magenta"
+    description = "                           DHCP"
+    }
+  group dfs {
+    DFS01-C[address=172.16.1.199/24, description = "<$database_server>\n DFS01-C\n Windows Core 2019\n Service:DFS\n Ansible node\n Roaming Profile File Share"]
+    DFS02-C[address=172.16.1.200/24, description = "<$database_server>\n DFS02-C\n Windows Core 2019\n Service:DFS\n Ansible node"]
+    color = "lightblue"
+    description = "                     Distributed File System"
+    }
+  group mgmt {
+    MGMT01-C[address=172.16.1.14/24, description = "<$application_server>\n MGMT01-C\n Windows Server 2019\n Service:Server Manager\n Background File Share"]
+    MGMT02-C[address=172.16.1.180/24, description = "<$application_server>\n MGMT02-C\n Windows Server 2019\n Service:Ansible Controller"]
+    color = "gold"
+    description = "                                  Management"
+    }
+  group misc {
+    Docker-C[address=172.16.1.5/24, description = "<$application_server>\n Docker-C\n Ubuntu\n Service:Docker\n Ansible node"]
+    Util-C[address=172.16.1.15/24, description = "<$application_server>\n Util-C\n CENTOS 7\n Service: Java\n Ansible node"]
+    color = "gray"
+    description = "                          Miscellaneous"
+    }
